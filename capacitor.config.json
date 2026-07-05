@@ -1,9 +1,5 @@
 {
   "appId": "com.pinna.newsiewoosie",
   "appName": "Newsie Woosie",
-  "webDir": "dist",
-  "server": {
-    "url": "https://66ad4e5f-2366-4c58-be1d-a2c5d2b12a4c.lovableproject.com?forceHideBadge=true",
-    "cleartext": true
-  }
+  "webDir": "dist"
 }
