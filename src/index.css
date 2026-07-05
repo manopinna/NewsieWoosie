@@ -1,0 +1,181 @@
+/* AI News Podcast - Pastel Gradient Theme */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@layer base {
+  :root {
+    /* Light Pastel Theme */
+    --background: 280 20% 97%;
+    --background-secondary: 280 30% 95%;
+    --background-tertiary: 270 40% 92%;
+    --foreground: 240 10% 20%;
+
+    --card: 270 40% 94%;
+    --card-foreground: 240 10% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 20%;
+
+    /* Primary - Purple accent */
+    --primary: 270 70% 55%;
+    --primary-glow: 270 70% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Soft purple */
+    --secondary: 270 50% 90%;
+    --secondary-foreground: 270 40% 30%;
+
+    --muted: 270 20% 85%;
+    --muted-foreground: 240 10% 45%;
+
+    --accent: 200 80% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 270 30% 88%;
+    --input: 270 20% 92%;
+    --ring: 270 70% 55%;
+
+    --radius: 1rem;
+
+    /* Feature card colors */
+    --card-audio: 270 50% 92%;
+    --card-text: 280 40% 90%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(180deg, hsl(280 30% 95%), hsl(270 30% 92%), hsl(270 40% 94%));
+    --gradient-primary: linear-gradient(135deg, hsl(270 70% 55%), hsl(280 70% 60%));
+    --gradient-card: linear-gradient(135deg, hsl(270 50% 95%), hsl(280 40% 92%));
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px hsl(270 30% 80% / 0.3);
+    --shadow-card: 0 8px 32px hsl(270 30% 70% / 0.15);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 240 10% 8%;
+    --background-secondary: 240 8% 12%;
+    --background-tertiary: 240 6% 16%;
+    --foreground: 210 40% 98%;
+
+    --card: 240 8% 14%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 240 8% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 270 70% 60%;
+    --primary-glow: 270 70% 70%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 270 30% 25%;
+    --secondary-foreground: 270 20% 90%;
+
+    --muted: 240 6% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 200 80% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 6% 20%;
+    --input: 240 6% 18%;
+    --ring: 270 70% 60%;
+
+    --card-audio: 270 30% 20%;
+    --card-text: 280 25% 18%;
+
+    --gradient-hero: linear-gradient(180deg, hsl(240 10% 8%), hsl(280 20% 12%), hsl(270 15% 10%));
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    background: var(--gradient-hero);
+    min-height: 100vh;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background-secondary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+}
+
+@layer components {
+  .feature-card {
+    @apply rounded-2xl p-8 text-center transition-all duration-300;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card);
+  }
+
+  .news-source-chip {
+    @apply px-4 py-2 rounded-full border border-border bg-background/80 text-foreground text-sm font-medium;
+    @apply hover:border-primary/50 hover:bg-primary/5 transition-all duration-200 cursor-pointer;
+  }
+
+  .news-source-chip.selected {
+    @apply border-primary bg-primary/10 text-primary;
+  }
+
+  .scroll-indicator {
+    @apply animate-bounce;
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+}
