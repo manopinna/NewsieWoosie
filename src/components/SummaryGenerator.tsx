@@ -87,6 +87,8 @@ export const SummaryGenerator = ({ onPlaySummary, sources, onGenerateRef, onPlay
         return null;
       }
 
+      const ttsChars = parseInt(response.headers.get('X-TTS-Chars') || '0', 10);
+      if (ttsChars) (audioBlob as any).__ttsChars = ttsChars;
       latestAudioBlobRef.current = audioBlob;
       const audioUrl = URL.createObjectURL(audioBlob);
       return audioUrl;
@@ -311,7 +313,7 @@ export const SummaryGenerator = ({ onPlaySummary, sources, onGenerateRef, onPlay
 
       const newSummary: Summary = {
         id: Date.now().toString(),
-        title: `Top Stories - ${new Date().toLocaleDateString()}`,
+        title: `Quick Read - ${new Date().toLocaleDateString()}`,
         content: audioContent,
         textContent: textContent,
         createdAt: new Date(),
@@ -484,6 +486,7 @@ export const SummaryGenerator = ({ onPlaySummary, sources, onGenerateRef, onPlay
 
       // Persist summary
       const summaryId = crypto.randomUUID();
+      const ttsChars = audioBlob ? ((audioBlob as any).__ttsChars as number | undefined) : undefined;
       const { error: insertError } = await supabase.from('podcast_summaries').insert({
         id: summaryId,
         title: summary.title,
@@ -491,6 +494,8 @@ export const SummaryGenerator = ({ onPlaySummary, sources, onGenerateRef, onPlay
         audio_url: audioUrl,
         duration: summary.duration,
         sources: summary.sources,
+        script_chars: summary.textContent?.length ?? null,
+        tts_chars: ttsChars ?? null,
       });
       if (insertError) {
         console.error('Failed to save summary:', insertError);
@@ -660,15 +665,6 @@ export const SummaryGenerator = ({ onPlaySummary, sources, onGenerateRef, onPlay
                 )}
               </Button>
               
-              <Button
-                onClick={loadArticlesBySource}
-                disabled={sources.length === 0}
-                variant="outline"
-                size="lg"
-              >
-                <FileText className="mr-2 h-5 w-5" />
-                View Articles
-              </Button>
             </div>
           </div>
         </Card>
@@ -755,22 +751,6 @@ export const SummaryGenerator = ({ onPlaySummary, sources, onGenerateRef, onPlay
         </div>
       )}
 
-      {/* Articles by Source */}
-      {showArticles && Object.keys(articlesBySource).length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-semibold">Top 5 Stories by Source</h3>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowArticles(false)}
-            >
-              Hide Articles
-            </Button>
-          </div>
-          <ArticlesBySource articlesBySource={articlesBySource} />
-        </div>
-      )}
     </div>
   );
 };

@@ -79,7 +79,7 @@ export const NewsSourceSelector = ({
   onToggleNewsletter,
 }: NewsSourceSelectorProps) => {
   const { toast } = useToast();
-  const [emailInput, setEmailInput] = useState("manopinna12@gmail.com");
+  const [emailInput, setEmailInput] = useState("");
   const [emailFrequency, setEmailFrequency] = useState<"once" | "daily">("once");
   const [newsletters, setNewsletters] = useState<Newsletter[]>([]);
   const [isLoadingNewsletters, setIsLoadingNewsletters] = useState(false);
@@ -271,7 +271,7 @@ export const NewsSourceSelector = ({
             <div className="flex flex-col sm:flex-row gap-2">
               <Input
                 type="email"
-                placeholder="Enter email address"
+                placeholder="Enter your email here"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
                 maxLength={255}

@@ -28,8 +28,9 @@ export const HeroSection = () => {
           </h1>
           
           {/* Description */}
-          <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto leading-relaxed">
-            The News feels too big to digest on most days doesn't it? What you need is news that you care about, from sources you like, summarized in a digestable way. A Newsie Woosie if you will!
+          <p className="text-muted-foreground text-base md:text-xl max-w-2xl leading-relaxed mx-4 sm:mx-6 md:mx-auto text-center">
+            The News feels too big to digest on most days doesn't it? What you need is news that you care about, from sources you like, summarized in a digestable way.
+            <br className="block md:hidden" /> A Newsie Woosie if you will!
           </p>
         </div>
       </div>

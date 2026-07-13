@@ -96,7 +96,7 @@ Deno.serve(async (req: Request) => {
     const messagesToFetch = messageIds.slice(0, 100)
     const newsletters: any[] = []
     const seenSenders = new Set<string>()
-    const excludedSenders = ['google', 'podcastify newsletters', 'podcastifynewsletters', 'seeking alpha', 'must reads']
+    const excludedSenders = ['google', 'podcastify newsletters', 'podcastifynewsletters', 'seeking alpha', 'must reads', 'dan from tldr', 'dan @ tldr', 'dan at tldr']
 
     // Sender name remapping for display consistency
     const senderNameMap: Record<string, string> = {

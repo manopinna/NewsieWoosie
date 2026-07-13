@@ -161,27 +161,33 @@ export type Database = {
           created_at: string
           duration: string | null
           id: string
+          script_chars: number | null
           sources: string[] | null
           text_content: string
           title: string
+          tts_chars: number | null
         }
         Insert: {
           audio_url?: string | null
           created_at?: string
           duration?: string | null
           id?: string
+          script_chars?: number | null
           sources?: string[] | null
           text_content: string
           title: string
+          tts_chars?: number | null
         }
         Update: {
           audio_url?: string | null
           created_at?: string
           duration?: string | null
           id?: string
+          script_chars?: number | null
           sources?: string[] | null
           text_content?: string
           title?: string
+          tts_chars?: number | null
         }
         Relationships: []
       }

@@ -100,6 +100,73 @@ function isUnwantedUrl(url: string): boolean {
   return skipPatterns.some(p => lower.includes(p))
 }
 
+function isTldrSender(senderName: string): boolean {
+  const lower = senderName.toLowerCase()
+  return lower === 'tldr' || lower.includes('tldr tech')
+}
+
+function mentionsDan(text: string): boolean {
+  return /\bdan\b/i.test(text)
+}
+
+function isDanContent(article: any, senderName: string): boolean {
+  if (!isTldrSender(senderName)) return false
+  const textToCheck = `${article.title || ''} ${article.description || ''} ${article.fullContent || ''}`
+  return mentionsDan(textToCheck)
+}
+
+// Housekeeping stories: admin updates about the newsletter itself rather than
+// the actual news/topics the newsletter covers.
+const HOUSEKEEPING_TITLE_PATTERNS = [
+  /\bwe[''\u2019]?re\s+(moving|changing|switching|updating|relaunching|rebranding)\b/i,
+  /\bnew\s+(platform|email\s*address|home|domain|look|format|design)\b/i,
+  /\bunsubscribe\b/i,
+  /\b(update|manage)\s+(your\s+)?(preferences|subscription|profile)\b/i,
+  /\bemail\s+preferences\b/i,
+  /\bwe[''\u2019]?re\s+hiring\b/i,
+  /\bjoin\s+(our|the)\s+team\b/i,
+  /\b(sponsor|advertise|partner\s+with\s+us)\b/i,
+  /\b(feedback|reply\s+to\s+this\s+email)\b/i,
+  /\b(forward\s+this|share\s+this|refer\s+a\s+friend)\b/i,
+  /\babout\s+(this\s+newsletter|us)\b/i,
+  /\bhow\s+to\s+use\b/i,
+  /\bwelcome\s+to\b/i,
+  /\byou[''\u2019]?re\s+subscribed\b/i,
+  /\brate\s+this\s+newsletter\b/i,
+  /\bsupport\s+us\b/i,
+  /\bbecome\s+a\s+member\b/i,
+  /\bimportant\s+(update|announcement)\b/i,
+  /\bprivacy\s+policy\b/i,
+  /\bterms\s+(of\s+service|and\s+conditions)\b/i,
+  /\bwe[''\u2019]?re\s+taking\s+a\s+break\b/i,
+  /\bsee\s+you\s+next\s+(year|week|month)\b/i,
+  /\bholiday\s+(break|schedule)\b/i,
+]
+
+const HOUSEKEEPING_CONTENT_PATTERNS = [
+  /\bwe[''\u2019]?re\s+(moving|changing|switching)\s+(to\s+a\s+)?new\s+(platform|email\s*address|provider)\b/i,
+  /\bwe[''\u2019]?ve\s+made\s+some\s+changes\b/i,
+  /\bwe[''\u2019]?re\s+excited\s+to\s+announce\b/i,
+  /\bthis\s+email\s+was\s+sent\s+to\b/i,
+  /\byou\s+are\s+receiving\s+this\b/i,
+  /\bupdate\s+your\s+(email\s+)?preferences\b/i,
+  /\bunsubscribe\s+(here|below|at)\b/i,
+  /\bforward\s+this\s+email\s+to\b/i,
+  /\bshare\s+this\s+newsletter\b/i,
+  /\brefer\s+a\s+friend\b/i,
+  /\bnew\s+domain\s+is\b/i,
+  /\bwe[''\u2019]?re\s+rebranding\b/i,
+]
+
+function isHousekeepingStory(article: any): boolean {
+  const title = article.title || ''
+  const text = `${article.description || ''} ${article.fullContent || ''}`
+  return (
+    HOUSEKEEPING_TITLE_PATTERNS.some((p) => p.test(title)) ||
+    HOUSEKEEPING_CONTENT_PATTERNS.some((p) => p.test(text))
+  )
+}
+
 function extractCanonicalUrl(rawHtml: string, rawText: string): string | null {
   // 1. Substack-style: "View this post on the web at <URL>"
   const viewWebMatch = (rawText + ' ' + rawHtml).match(/View this post on the web at\s+(https?:\/\/\S+)/i)
@@ -317,14 +384,28 @@ Deno.serve(async (req: Request) => {
         }
         cleanDesc = cleanDesc.replace(/\s+/g, ' ').trim()
 
-        articles.push({
+        const article = {
           title: subject,
           description: cleanDesc.substring(0, 300),
           source: sender_name,
           publishedAt: date,
           url: articleUrl,
           fullContent: content,
-        })
+        }
+
+        // Skip TLDR articles that prominently feature Dan
+        if (isDanContent(article, sender_name)) {
+          console.log(`[fetch-newsletter-content] Skipping Dan-related TLDR article: ${subject}`)
+          continue
+        }
+
+        // Skip newsletter housekeeping stories (admin updates, platform moves, etc.)
+        if (isHousekeepingStory(article)) {
+          console.log(`[fetch-newsletter-content] Skipping housekeeping story: ${subject}`)
+          continue
+        }
+
+        articles.push(article)
       } catch (e) {
         console.error(`[fetch-newsletter-content] Error fetching ${msgId}:`, e)
       }

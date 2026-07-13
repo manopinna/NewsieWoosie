@@ -40,6 +40,8 @@ Deno.serve(async (req: Request) => {
       .replace(/\[beat\]/gi, ' — ')
       .replace(/\[short pause\]/gi, ', ')
       .replace(/\[pause\]/gi, ' — ')
+      .replace(/\bU\.S\.A\./g, 'USA')
+      .replace(/\bU\.S\./g, 'US')
 
     const selectedVoiceId = voiceId || RACHEL_VOICE_ID
     console.log(`[elevenlabs-tts] Generating for ${cleanedText.length} chars, voice ${selectedVoiceId}`)
@@ -178,7 +180,12 @@ Deno.serve(async (req: Request) => {
     console.log(`[elevenlabs-tts] Merged ${buffers.length} chunk(s) into ${totalLen} bytes`)
 
     return new Response(merged, {
-      headers: { ...corsHeaders, 'Content-Type': 'audio/mpeg' },
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'audio/mpeg',
+        'X-TTS-Chars': String(cleanedText.length),
+        'Access-Control-Expose-Headers': 'X-TTS-Chars',
+      },
     })
   } catch (error: any) {
     console.error('[elevenlabs-tts] Error:', error)
