@@ -1,16 +1,16 @@
 import { Sparkles } from "lucide-react";
-import armadilloMascot from "@/assets/armadillo-mascot.png";
+import armadilloMascot from "@/assets/newspaper-mascot.png";
 
 export const HeroSection = () => {
   return (
     <section className="relative px-4 pt-16 pb-4 md:px-6 md:pt-28 md:pb-8">
       <div className="max-w-3xl mx-auto">
         {/* Mascot Image */}
-        <div className="flex justify-center mb-4 md:mb-8 md:justify-start md:-ml-0 md:absolute md:left-8 md:-top-2 lg:left-16">
+        <div className="flex justify-center mt-2 mb-4 md:mb-8 md:justify-start md:-ml-0 md:absolute md:left-4 md:top-2 lg:left-10">
           <img 
             src={armadilloMascot} 
-            alt="Armadillo reading newspaper" 
-            className="w-28 h-28 md:w-56 md:h-56 object-contain"
+            alt="Person overwhelmed by newspaper headlines" 
+            className="w-44 h-44 md:w-60 md:h-60 object-contain"
           />
         </div>
         
